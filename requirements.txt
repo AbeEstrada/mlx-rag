@@ -1,0 +1,5 @@
+langchain
+sentence_transformers
+chromadb
+mlx_lm
+pypdf
