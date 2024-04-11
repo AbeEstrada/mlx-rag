@@ -15,7 +15,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-![mlx-rag](https://gist.github.com/assets/7937/65e44579-3d29-49b7-a49d-aff51e741fba)
+![mlx-rag](https://github.com/AbeEstrada/mlx-rag/assets/7937/ed16eaab-a295-411f-8881-ff018cf4fafb)
 
 ### Example document
 
