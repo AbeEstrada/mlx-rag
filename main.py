@@ -8,7 +8,10 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 
 document = PyPDFLoader("./2312.03103.pdf").load()
-documents = RecursiveCharacterTextSplitter().split_documents(document)
+documents = RecursiveCharacterTextSplitter(
+    chunk_size=500,
+    chunk_overlap=0,
+).split_documents(document)
 
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2",
@@ -19,27 +22,22 @@ vectorstore = Chroma.from_documents(documents, embeddings)
 retriever = vectorstore.as_retriever()
 
 llm = MLXPipeline.from_model_id(
-    "mlx-community/gemma-1.1-7b-it-4bit",
-    pipeline_kwargs={"max_tokens": 2048, "temp": 0.9},
+    "mlx-community/llama2-13b-qnt4bit",
+    pipeline_kwargs={"max_tokens": 2048, "temp": 0.2},
 )
 
 
 template = """
-You are an assistant for question-answering tasks.
-Use the provided context only to write an answer:
-
-<context>
-{context}
-</context>
-
-Question: {input}
+[INST]<<SYS>> You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.<</SYS>> 
+Question: {input} 
+Context: {context} 
+Answer: [/INST]
 """
 
 prompt = ChatPromptTemplate.from_template(template)
 doc_chain = create_stuff_documents_chain(llm, prompt)
 chain = create_retrieval_chain(retriever, doc_chain)
 
-response = chain.invoke(
-    {"input": "Give me a summary of this paper"})
+response = chain.invoke({"input": "Give me a summary of this paper"})
 
 print(response["answer"])
