@@ -4,6 +4,7 @@ Retrieval Augmented Generation (RAG) example using [Langchain](https://python.la
 
 This example code was tested with these models:
 
+- `mlx-community/WizardLM-2-7B-4bit`
 - `mlx-community/gemma-1.1-7b-it-4bit`
 - `mlx-community/Mistral-7B-Instruct-v0.2-4bit`
 - `mlx-community/Mixtral-8x7B-Instruct-v0.1-hf-4bit-mlx`
