@@ -25,24 +25,14 @@ retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k
 
 llm = MLXPipeline.from_model_id(
     "mlx-community/gemma-2-9b-it-4bit",
-    pipeline_kwargs={"max_tokens": 2000, "temp": 0.2},
+    pipeline_kwargs={"max_tokens": 2000, "temp": 1.0},
 )
 
-template1 = """
+template = """
 You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three paragraphs maximum and keep the answer concise.
 Question: {input} 
 Context: {context} 
 Answer:"""
-
-template = (
-    "Context information is below.\n"
-    "---------------------\n"
-    "{context}\n"
-    "---------------------\n"
-    "Given the context information above I want you to think step by step to answer the query in a crisp manner, incase case you don't know the answer say 'I don't know!'.\n"
-    "Query: {input}\n"
-    "Answer: "
-)
 
 prompt = ChatPromptTemplate.from_template(template)
 doc_chain = create_stuff_documents_chain(llm, prompt)
