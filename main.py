@@ -9,8 +9,8 @@ from langchain.chains import create_retrieval_chain
 
 document = PyPDFLoader("./2312.03103.pdf").load()
 documents = RecursiveCharacterTextSplitter(
-    chunk_size=512,
-    chunk_overlap=0,
+    chunk_size=1500,
+    chunk_overlap=100,
 ).split_documents(document)
 
 embeddings = HuggingFaceEmbeddings(
@@ -21,27 +21,33 @@ embeddings = HuggingFaceEmbeddings(
 )
 
 vectorstore = Chroma.from_documents(documents, embeddings)
-retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 6})
 
 llm = MLXPipeline.from_model_id(
-    "mlx-community/Meta-Llama-3-8B-Instruct-4bit",
-    pipeline_kwargs={"max_tokens": 1024, "temp": 0.2},
+    "mlx-community/gemma-2-9b-it-4bit",
+    pipeline_kwargs={"max_tokens": 2000, "temp": 0.2},
 )
 
-template = """
-[INST]<<SYS>> You are an assistant for question-answering tasks.
-Use the following pieces of retrieved context to answer the question.
-If you don't know the answer, just say that you don't know.
-Use three sentences minimum and keep the answer concise.<</SYS>>
-Question: {input}
-Context: {context}
-Answer: [/INST]
-"""
+template1 = """
+You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three paragraphs maximum and keep the answer concise.
+Question: {input} 
+Context: {context} 
+Answer:"""
+
+template = (
+    "Context information is below.\n"
+    "---------------------\n"
+    "{context}\n"
+    "---------------------\n"
+    "Given the context information above I want you to think step by step to answer the query in a crisp manner, incase case you don't know the answer say 'I don't know!'.\n"
+    "Query: {input}\n"
+    "Answer: "
+)
 
 prompt = ChatPromptTemplate.from_template(template)
 doc_chain = create_stuff_documents_chain(llm, prompt)
 chain = create_retrieval_chain(retriever, doc_chain)
 
-response = chain.invoke({"input": "Give me a summary of this document"})
+response = chain.invoke({"input": "What is the summary?"})
 
 print(response["answer"])
