@@ -35,5 +35,9 @@ prompt = ChatPromptTemplate.from_template(template)
 doc_chain = create_stuff_documents_chain(llm, prompt)
 chain = create_retrieval_chain(retriever, doc_chain)
 
-response = chain.invoke({"input": "Create a summary"})
-print(response["answer"])
+while True:
+    question = input("\nEnter your question (or 'quit' to exit): ")
+    if question.lower() == "quit":
+        break
+    response = chain.invoke({"input": question})
+    print("\nAnswer:", response["answer"])
