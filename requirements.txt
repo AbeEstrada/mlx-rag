@@ -1,5 +1,8 @@
 langchain
+langchain-community
+langchain-chroma
+langchain-huggingface
+langchain-text-splitters
 sentence_transformers
-chromadb
 mlx_lm
 pypdf
