@@ -1,6 +1,6 @@
 # MLX RAG
 
-Retrieval Augmented Generation (RAG) example using [Langchain](https://python.langchain.com/docs/get_started/quickstart/) (loader), [Chroma](https://docs.trychroma.com/getting-started) (vector database), [Hugging Face sentence-transformers](https://huggingface.co/sentence-transformers) (embeddings) and [MLX](https://huggingface.co/mlx-community) (LLM).
+Retrieval Augmented Generation (RAG) example using [Langchain](https://python.langchain.com/docs/get_started/quickstart/) (loader), [Chroma](https://docs.trychroma.com/docs/overview/getting-started) (vector database), [Hugging Face sentence-transformers](https://huggingface.co/sentence-transformers) (embeddings) and [MLX](https://huggingface.co/mlx-community) (LLM).
 
 This example code was tested with these models:
 
