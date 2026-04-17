@@ -5,6 +5,7 @@ from langchain_chroma import Chroma
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from mlx_lm import load, generate
+from mlx_lm.sample_utils import make_sampler
 
 document = PyPDFLoader("./2312.03103.pdf").load()
 documents = RecursiveCharacterTextSplitter(
@@ -36,7 +37,7 @@ def format_docs(docs):
 chain = (
     {"context": retriever | format_docs, "input": RunnablePassthrough()}
     | prompt
-    | RunnableLambda(lambda p: generate(model, tokenizer, p.text, max_tokens=2000))
+    | RunnableLambda(lambda p: generate(model, tokenizer, p.text, max_tokens=2000, sampler=make_sampler(temp=0.2)))
 )
 
 while True:
